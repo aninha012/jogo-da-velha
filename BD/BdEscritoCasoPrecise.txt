@@ -1,0 +1,282 @@
+USE [master]
+GO
+/****** Object:  Database [jogodavelha]    Script Date: 07/06/2025 20:19:25 ******/
+CREATE DATABASE [jogodavelha]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'jogodavelha', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\jogodavelha.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'jogodavelha_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\jogodavelha_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [jogodavelha] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [jogodavelha].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [jogodavelha] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [jogodavelha] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [jogodavelha] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [jogodavelha] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [jogodavelha] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [jogodavelha] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [jogodavelha] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [jogodavelha] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [jogodavelha] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [jogodavelha] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [jogodavelha] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [jogodavelha] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [jogodavelha] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [jogodavelha] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [jogodavelha] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [jogodavelha] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [jogodavelha] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [jogodavelha] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [jogodavelha] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [jogodavelha] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [jogodavelha] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [jogodavelha] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [jogodavelha] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [jogodavelha] SET  MULTI_USER 
+GO
+ALTER DATABASE [jogodavelha] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [jogodavelha] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [jogodavelha] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [jogodavelha] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [jogodavelha] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [jogodavelha] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [jogodavelha] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [jogodavelha] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [jogodavelha]
+GO
+/****** Object:  User [phpuser]    Script Date: 07/06/2025 20:19:25 ******/
+CREATE USER [phpuser] FOR LOGIN [phpuser] WITH DEFAULT_SCHEMA=[dbo]
+GO
+ALTER ROLE [db_owner] ADD MEMBER [phpuser]
+GO
+/****** Object:  Table [dbo].[jogadas]    Script Date: 07/06/2025 20:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[jogadas](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[partida_id] [int] NULL,
+	[posicao] [int] NULL,
+	[jogador] [char](1) NULL,
+	[rodada] [int] NULL,
+	[simbolo] [char](1) NOT NULL,
+	[ordem_jogada] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[movimentos]    Script Date: 07/06/2025 20:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[movimentos](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[partida_id] [int] NOT NULL,
+	[jogador_id] [int] NULL,
+	[posicao] [int] NOT NULL,
+	[ordem] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[partidas]    Script Date: 07/06/2025 20:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[partidas](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[jogador1_id] [int] NULL,
+	[jogador2_id] [int] NULL,
+	[vencedor_id] [int] NULL,
+	[data_partida] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[usuarios]    Script Date: 07/06/2025 20:19:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[usuarios](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[nome] [varchar](100) NOT NULL,
+	[email] [varchar](100) NOT NULL,
+	[senha] [varchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[movimentos] ON 
+
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (1, 78, NULL, 0, 1)
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (2, 78, NULL, 4, 2)
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (3, 78, NULL, 8, 3)
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (4, 79, NULL, 0, 1)
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (5, 79, NULL, 4, 2)
+INSERT [dbo].[movimentos] ([id], [partida_id], [jogador_id], [posicao], [ordem]) VALUES (6, 79, NULL, 8, 3)
+SET IDENTITY_INSERT [dbo].[movimentos] OFF
+GO
+SET IDENTITY_INSERT [dbo].[partidas] ON 
+
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (6, 1, NULL, 1, CAST(N'2025-06-06T17:10:07.727' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (7, 1, NULL, NULL, CAST(N'2025-06-06T17:10:18.080' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (13, 1, NULL, NULL, CAST(N'2025-06-06T17:17:57.770' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (14, 1, NULL, NULL, CAST(N'2025-06-06T17:18:02.800' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (15, 1, NULL, NULL, CAST(N'2025-06-06T17:18:07.753' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (16, 1, NULL, NULL, CAST(N'2025-06-06T17:18:11.360' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (17, 1, NULL, NULL, CAST(N'2025-06-06T17:18:16.180' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (18, 1, NULL, NULL, CAST(N'2025-06-06T17:18:22.797' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (19, 1, NULL, NULL, CAST(N'2025-06-06T17:18:25.053' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (20, 1, NULL, NULL, CAST(N'2025-06-06T17:19:16.927' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (21, 1, NULL, NULL, CAST(N'2025-06-06T17:19:30.170' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (22, 1, NULL, NULL, CAST(N'2025-06-06T17:19:45.693' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (23, 1, NULL, NULL, CAST(N'2025-06-06T17:19:55.660' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (24, 1, NULL, NULL, CAST(N'2025-06-06T17:21:04.367' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (25, 1, NULL, NULL, CAST(N'2025-06-06T17:21:15.250' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (26, 1, NULL, NULL, CAST(N'2025-06-06T17:22:45.950' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (27, 1, NULL, NULL, CAST(N'2025-06-06T17:22:54.057' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (28, 1, NULL, NULL, CAST(N'2025-06-06T17:22:59.597' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (29, 1, NULL, NULL, CAST(N'2025-06-06T17:24:12.030' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (30, 1, NULL, NULL, CAST(N'2025-06-06T17:27:37.840' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (31, 1, NULL, NULL, CAST(N'2025-06-06T17:27:45.213' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (32, 1, NULL, NULL, CAST(N'2025-06-06T17:29:36.920' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (33, 1, NULL, NULL, CAST(N'2025-06-06T17:29:48.060' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (34, 1, NULL, NULL, CAST(N'2025-06-06T17:29:55.757' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (35, 1, NULL, NULL, CAST(N'2025-06-06T17:30:02.730' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (36, 1, NULL, NULL, CAST(N'2025-06-06T17:30:08.633' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (37, 1, NULL, NULL, CAST(N'2025-06-06T17:30:13.443' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (38, 1, NULL, NULL, CAST(N'2025-06-06T17:30:16.927' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (39, 1, NULL, NULL, CAST(N'2025-06-06T17:30:32.570' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (40, 1, NULL, NULL, CAST(N'2025-06-06T17:30:39.120' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (41, 1, NULL, NULL, CAST(N'2025-06-06T17:30:42.310' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (42, 1, NULL, NULL, CAST(N'2025-06-06T17:30:53.847' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (43, 1, NULL, NULL, CAST(N'2025-06-06T17:31:07.587' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (44, 1, NULL, NULL, CAST(N'2025-06-06T17:33:04.883' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (45, 1, NULL, NULL, CAST(N'2025-06-06T17:33:32.600' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (49, 1, -1, -1, CAST(N'2025-06-06T17:47:06.690' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (50, 1, -1, -1, CAST(N'2025-06-06T17:47:24.690' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (51, 1, -1, -1, CAST(N'2025-06-06T17:53:26.997' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (52, 1, -1, -1, CAST(N'2025-06-06T17:56:21.427' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (53, 1, -1, -1, CAST(N'2025-06-06T17:58:44.153' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (54, 1, -1, -1, CAST(N'2025-06-06T18:00:24.117' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (55, 1, -1, -1, CAST(N'2025-06-06T18:01:59.090' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (56, 1, -1, -1, CAST(N'2025-06-06T18:02:01.540' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (57, 1, -1, -1, CAST(N'2025-06-06T18:02:04.100' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (58, 1, -1, -1, CAST(N'2025-06-06T18:02:16.040' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (59, 1, -1, -1, CAST(N'2025-06-06T18:14:01.993' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (60, 1, -1, -1, CAST(N'2025-06-06T18:14:07.397' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (61, 1, -1, -1, CAST(N'2025-06-06T18:14:11.880' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (62, 1, -1, -1, CAST(N'2025-06-06T18:15:01.283' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (63, 1, -1, -1, CAST(N'2025-06-06T18:15:06.457' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (64, 1, -1, -1, CAST(N'2025-06-06T18:16:11.830' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (65, 1, -1, -1, CAST(N'2025-06-06T18:16:14.857' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (66, 2, -1, -1, CAST(N'2025-06-06T18:18:42.730' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (67, 2, -1, -1, CAST(N'2025-06-06T18:18:50.610' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (68, 3, -1, -1, CAST(N'2025-06-06T18:44:10.040' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (69, 3, -1, -1, CAST(N'2025-06-06T18:44:12.187' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (70, 3, -1, -1, CAST(N'2025-06-06T18:44:14.907' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (71, 3, -1, NULL, CAST(N'2025-06-06T18:44:25.113' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (72, 1, -1, -1, CAST(N'2025-06-06T19:53:46.010' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (73, 1, -1, -1, CAST(N'2025-06-06T19:56:23.453' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (74, 1, -1, -1, CAST(N'2025-06-06T19:59:59.097' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (75, 1, -1, -1, CAST(N'2025-06-06T20:00:02.163' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (76, 1, -1, -1, CAST(N'2025-06-06T20:04:48.430' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (77, 1, -1, -1, CAST(N'2025-06-06T20:07:49.753' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (78, 1, -1, -1, CAST(N'2025-06-06T20:07:52.047' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (79, 1, -1, -1, CAST(N'2025-06-06T20:15:18.643' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (80, 1, -1, -1, CAST(N'2025-06-06T20:19:32.810' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (81, 1, -1, -1, CAST(N'2025-06-06T20:29:14.370' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (82, 1, -1, -1, CAST(N'2025-06-06T20:29:16.687' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (83, 1, -1, -1, CAST(N'2025-06-06T20:30:19.483' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (84, 1, -1, -1, CAST(N'2025-06-06T20:31:59.323' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (85, NULL, NULL, NULL, CAST(N'2025-06-06T20:42:18.860' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (86, NULL, NULL, NULL, CAST(N'2025-06-06T20:42:18.917' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (87, 1, -1, -1, CAST(N'2025-06-06T20:42:44.813' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (88, 1, -1, -1, CAST(N'2025-06-06T20:55:48.953' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (89, 1, -1, -1, CAST(N'2025-06-06T21:12:18.547' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (90, 1, -1, NULL, CAST(N'2025-06-06T21:12:23.700' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (91, 1, -1, -1, CAST(N'2025-06-07T20:06:28.350' AS DateTime))
+INSERT [dbo].[partidas] ([id], [jogador1_id], [jogador2_id], [vencedor_id], [data_partida]) VALUES (92, 1, -1, -1, CAST(N'2025-06-07T20:06:31.520' AS DateTime))
+SET IDENTITY_INSERT [dbo].[partidas] OFF
+GO
+SET IDENTITY_INSERT [dbo].[usuarios] ON 
+
+INSERT [dbo].[usuarios] ([id], [nome], [email], [senha]) VALUES (1, N'gustavo', N'gustavo@gmail.com', N'$2y$10$Z5hWkRBcYBnlxEGLg9AHWOAIhHc8qFquthJBxHALFHnsBAenJ8fEC')
+INSERT [dbo].[usuarios] ([id], [nome], [email], [senha]) VALUES (2, N'pedro', N'pedro@gmail.com', N'$2y$10$TEMn8IDw2EwP5vyY/DQqh.2e8dAvKlqTzBr5PK2j/28d6koW6y0yK')
+INSERT [dbo].[usuarios] ([id], [nome], [email], [senha]) VALUES (3, N'nicole', N'nicole1@gmail.com', N'$2y$10$FjF/NVyi4DdH/Plej2pCzOvs7jdrh7b2VKWgIxCZB3k.yRmo3zg2i')
+SET IDENTITY_INSERT [dbo].[usuarios] OFF
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__usuarios__AB6E6164B7F6E803]    Script Date: 07/06/2025 20:19:25 ******/
+ALTER TABLE [dbo].[usuarios] ADD UNIQUE NONCLUSTERED 
+(
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[jogadas] ADD  DEFAULT ('X') FOR [simbolo]
+GO
+ALTER TABLE [dbo].[jogadas] ADD  DEFAULT ((1)) FOR [ordem_jogada]
+GO
+ALTER TABLE [dbo].[partidas] ADD  DEFAULT (getdate()) FOR [data_partida]
+GO
+ALTER TABLE [dbo].[jogadas]  WITH CHECK ADD FOREIGN KEY([partida_id])
+REFERENCES [dbo].[partidas] ([id])
+GO
+ALTER TABLE [dbo].[movimentos]  WITH CHECK ADD FOREIGN KEY([partida_id])
+REFERENCES [dbo].[partidas] ([id])
+GO
+USE [master]
+GO
+ALTER DATABASE [jogodavelha] SET  READ_WRITE 
+GO
